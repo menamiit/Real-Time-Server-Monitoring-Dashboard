@@ -1,13 +1,18 @@
 const express = require('express')
-const mongoose = require("mongoose")
 const cors = require('cors')
 const http = require('http')
 const socketIO = require('socket.io')
+const metricsIO = require('./sockets/metricsSocket')(io)
 const { timeStamp } = require('console')
+const connectDB = require('../../../project-CO2/server/config/db')
 require('dotenv').congig();
 
+// Connect Database
+connectDB();
+
 const app = express();
-const sever = http.createServer(app);
+const server = http.createServer(app);
+app.set('io', metricsIO);
 
 const io = socketIO(Server, {
     cors: {
@@ -19,9 +24,6 @@ const io = socketIO(Server, {
 // Middleware
 app.use(cors());
 app.use(express.json());
-
-// MongoDB Connection
-mongoose.connect(process.env.MONGO_URL).then(()=> console.log('MongoDB Connected')).catch(err => console.error('MongoDB error: ', err));
 
 // Routes
 app.use('/api/auth', require('./routes/auth'));
