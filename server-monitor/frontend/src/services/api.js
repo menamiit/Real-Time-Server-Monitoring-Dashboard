@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = process.env.REACT_APP_API_URL || 'https://localhost:5000';
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 const api = axios.create({
     baseURL: API_URL,
@@ -23,14 +23,14 @@ api.interceptors.request.use(
 
 // Auth apis
 export const authAPI = {
-    register: (userData) => { api.post('/api/auth/register', userData) },
-    login: (credentials) => { api.post('/api/auth/login', credentials) },
+    register: (userData) => api.post('/api/auth/register', userData),
+    login: (credentials) => api.post('/api/auth/login', credentials),
 };
 
 // Metrics api
 export const metricsAPI = {
-    getMetrics: (params) => { api.get('/api/metrics', { params }) },
-    getLatest: (serverId) => { api.get('/api/metrics/latest', { params: { serverId } }) },
+    getMetrics: (params) => api.get('/api/metrics', { params }),
+    getLatest: (serverId) => api.get('/api/metrics/latest', { params: { serverId } }),
 };
 
 export default api;
