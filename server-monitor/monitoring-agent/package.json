@@ -1,0 +1,19 @@
+{
+  "name": "monitoring-agent",
+  "version": "1.0.0",
+  "description": "Server monitoring data collection agent",
+  "main": "agent.js",
+  "scripts": {
+    "start": "node agent.js",
+    "dev": "nodemon agent.js"
+  },
+  "keywords": ["monitoring", "server", "metrics"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.13.2",
+    "dotenv": "^17.2.3",
+    "node-os-utils": "^2.0.1",
+    "systeminformation": "^5.27.11"
+  }
+}
