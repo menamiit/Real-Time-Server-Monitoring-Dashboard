@@ -24,7 +24,7 @@ async function collectMetrics() {
 
     // Collect all metrics
     const [cpu, memory, disk, network] = await Promise.all([
-      getCpuMetrics(),
+      Promise.resolve(getCpuMetrics()),
       Promise.resolve(getMemoryMetrics()),
       Promise.resolve(getDiskMetrics()),
       Promise.resolve(getNetworkMetrics())

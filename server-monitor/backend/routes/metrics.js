@@ -6,16 +6,23 @@ const auth = require('../middleware/auth');
 // POST: recieve metrics from monitoring agent
 router.post('/', async (req, res) => {
     try {
+        console.log('📥 Received metrics:', JSON.stringify(req.body, null, 2));
+
         const metric = new ServerMetric(req.body);
         await metric.save();
 
-        // Exit to all connected clients via Socket.io
-        req.app.get('io').emit('newMetric', metric);
+        console.log('💾 Saved to database');
+
+        // Emit to all connected clients via Socket.io
+        const io = req.app.get('io');
+        io.emit('newMetric', metric);
+
+        console.log('📡 Broadcasted to clients');
 
         res.json({ success: true, metric });
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Failed to save metric' });
+        console.error('❌ Error saving metric:', err);
+        res.status(500).json({ error: 'Failed to save metric', details: err.message });
     }
 });
 
@@ -40,14 +47,14 @@ router.get('/', async (req, res) => {
 
 router.get('/latest', auth, async (req, res) => {
     try {
-        const {serverId} = req.query;
-        const query = serverId ? {serverId} : {};
+        const { serverId } = req.query;
+        const query = serverId ? { serverId } : {};
 
-        const metric = await ServerMetric.findOne(query).sort({timestamp: -1});
+        const metric = await ServerMetric.findOne(query).sort({ timestamp: -1 });
         res.json(metric);
     } catch (err) {
         console.error(err);
-        res.status(500).json({error: 'Failed to fetch latest metric'});
+        res.status(500).json({ error: 'Failed to fetch latest metric' });
     }
 });
 

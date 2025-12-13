@@ -27,7 +27,7 @@ const Dashboard = () => {
 
     // Connect to Socket.io
     const socket = socketService.connect();
-    
+
     socket.on('connect', () => {
       setConnectionStatus('connected');
     });
@@ -68,17 +68,16 @@ const Dashboard = () => {
             <h1 className="text-2xl font-bold text-gray-800">Server Monitor Dashboard</h1>
             <p className="text-sm text-gray-500">Welcome, {user?.username}</p>
           </div>
-          
+
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
-              <div className={`w-3 h-3 rounded-full ${
-                connectionStatus === 'connected' ? 'bg-green-500' : 
-                connectionStatus === 'connecting' ? 'bg-yellow-500' : 
-                'bg-red-500'
-              }`} />
+              <div className={`w-3 h-3 rounded-full ${connectionStatus === 'connected' ? 'bg-green-500' :
+                  connectionStatus === 'connecting' ? 'bg-yellow-500' :
+                    'bg-red-500'
+                }`} />
               <span className="text-sm text-gray-600 capitalize">{connectionStatus}</span>
             </div>
-            
+
             <button
               onClick={logout}
               className="flex items-center gap-2 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
@@ -98,31 +97,31 @@ const Dashboard = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
               <MetricCard
                 title="CPU Usage"
-                value={(currentMetric.cpu.usage ?? 0).toFixed(1)}
+                value={currentMetric?.cpu?.usage?.toFixed(1) || '0.0'}
                 unit="%"
                 icon={Cpu}
-                color={getCpuColor(currentMetric.cpu.usage ?? 0)}
+                color={getCpuColor(currentMetric?.cpu?.usage || 0)}
               />
-              
+
               <MetricCard
                 title="Memory Usage"
-                value={(currentMetric.memory.usagePercent ?? 0).toFixed(1)}
+                value={currentMetric?.memory?.usagePercent?.toFixed(1) || '0.0'}
                 unit="%"
                 icon={Activity}
-                color={getMemoryColor(currentMetric.memory.usagePercent ?? 0)}
+                color={getMemoryColor(currentMetric?.memory?.usagePercent || 0)}
               />
-              
+
               <MetricCard
                 title="Disk Usage"
-                value={(currentMetric.disk?.[0]?.usagePercent ?? 0).toFixed(1)}
+                value={currentMetric?.disk?.[0]?.usagePercent?.toFixed(1) || '0.0'}
                 unit="%"
                 icon={HardDrive}
                 color="purple"
               />
-              
+
               <MetricCard
                 title="Network Connections"
-                value={currentMetric.network?.activeConnections ?? 0}
+                value={currentMetric?.network?.activeConnections || 0}
                 icon={Network}
                 color="blue"
               />
@@ -139,7 +138,7 @@ const Dashboard = () => {
                 title="CPU Usage Over Time"
                 color="#ef4444"
               />
-              
+
               <ChartComponent
                 data={historicalData.map(m => ({
                   timestamp: m.timestamp,
@@ -174,11 +173,10 @@ const Dashboard = () => {
                         <td className="py-2">{disk.used}</td>
                         <td className="py-2">{disk.available}</td>
                         <td className="py-2">
-                          <span className={`font-semibold ${
-                            (disk.usagePercent ?? 0) > 80 ? 'text-red-600' : 
-                            (disk.usagePercent ?? 0) > 60 ? 'text-yellow-600' : 
-                            'text-green-600'
-                          }`}>
+                          <span className={`font-semibold ${(disk.usagePercent ?? 0) > 80 ? 'text-red-600' :
+                              (disk.usagePercent ?? 0) > 60 ? 'text-yellow-600' :
+                                'text-green-600'
+                            }`}>
                             {(disk.usagePercent ?? 0).toFixed(1)}%
                           </span>
                         </td>
